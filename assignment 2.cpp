@@ -8,35 +8,31 @@ using namespace std;
 string welcome();
 void print_seats(string flight[]);
 void populate_seats();
+bool exist(string a, int b);
 
 //2D array for storing seat numbers and passenger details
 string flights [5][52]; 
 string passengers [4][250];
 
-int main()
-{   
+int main(){   
     string seat, flight, book = "y";
     int int_flight, p = 0, j = 0;
     populate_seats();
     
-    while (book == "y")
-    {   
+    while (book == "y"){   
         passengers[p][0] = (welcome());
 
         cout << "\nThe available travel times for flights are:" << endl;
         cout << "    Depart\tArrive" << endl;
-        for (int i = 0; i < 5; i++)
-        {               
-            if (flights[i][51] != "50")
-            {
+        
+        for (int i = 0; i < 5; i++){               
+            if (flights[i][51] != "50"){
             cout << i+1 << ".  " << flights[i][0] << endl;
             }
-            else if (j < 4)
-            {
+            else if (j < 4){
                 j++;
             }
-            else
-            {
+            else{
                 cout << "\nAll flights are booked" << endl;
                 return 0;
             }
@@ -45,18 +41,19 @@ int main()
 
         cin >> flight;
         passengers[p][1] = flight;
-    
-        cout << "\nSelect your seat:" << endl;
+
+        cout << "\nSelect your seat:" << endl;        
 
         int_flight = stoi(flight);
         print_seats(flights[int_flight]);
 
-        cin >> seat;
+        do{
+            cin >> seat;                
+        }
+        while (!exist(seat, int_flight));
 
-        for (int i = 0; i <  50; i++)
-        {
-            if (flights[int_flight][i] == seat)
-            {
+        for (int i = 0; i < 51; i++){
+            if (flights[int_flight][i] == seat){
                 flights[int_flight][i] = "**";
                 break;
             }
@@ -74,8 +71,7 @@ int main()
 }
 
 //Welcome message and passenger name capture
-string welcome()
-{   
+string welcome(){   
     string passenger;
 
     cout << "Welcome to the COS1511 Flight Booking System\n" << endl;
@@ -87,59 +83,48 @@ string welcome()
 }
 
 //Prints out seats with the correct layout
-void print_seats(string flight[])
-{   
+void print_seats(string flight[]){   
     int k = 0;
-    for (int j = 0; j < 9; j++)
-    {   
+
+    for (int j = 0; j < 9; j++){   
         cout << "|";
-        for (int i = 0; i < 3; i++)
-        {
-        cout << flight[k+1] << "|";
-        k++;
-            if (k > 49)
-            {
-                cout << endl;
-                return;
+        for (int i = 0; i < 3; i++){
+            cout << flight[k+1] << "|";
+            k++;
+                if (k > 49){
+                    cout << endl;
+                    return;
             }
         }
 
         cout << "----";
         
-        for (int i = 0; i < 3; i++)
-        {
-        cout << "|" << flight[k+1];
-        k++;
+        for (int i = 0; i < 3; i++){
+            cout << "|" << flight[k+1];
+            k++;
         }
         cout << "|" << endl;
     }
 }
 
 //Seat generation for all 5 flights
-void populate_seats()
-{
+void populate_seats(){
     flights[0][0] = "07:00\t09:30";
     flights[1][0] = "09:00\t11:30";
     flights[2][0] = "11:00\t13:30";
     flights[3][0] = "13:00\t15:30";
     flights[4][0] = "15:00\t17:30";
-    for (int a = 0; a < 5; a++)
-    {   
+    
+    for (int a = 0; a < 5; a++){   
         int b = 0;
-        for (int i = 17; i < 26; i++)
-        {
-            for ( int j = 1; j < 7; j++)
-            {   
-                char achar = '0' + i;
+        for (int i = 17; i < 26; i++){
+            for ( int j = 1; j < 7; j++){   
 
                 if (i == 25 && j > 2){
                     break;
                 }
-                else
-
                 //Converting i into an ascii character to form the letters
-                char achar = '0' + i;
-                string seat = achar + to_string(j);
+                string seat = char('0' + i) + to_string(j);
                 flights[a][b+1] = seat;
                 
                 b++;
@@ -149,7 +134,12 @@ void populate_seats()
     }
 }
 
-string authenticate(string a, string correct)
-{
-    return "hello";
+bool exist(string a, int b){
+    for (int i = 0; i < 51; i++){
+        if (flights[b][i] == a){    
+            return true;
+        }
+    }    
+    cout << "Enter a valid seat" << endl;
+    return false ;
 }
