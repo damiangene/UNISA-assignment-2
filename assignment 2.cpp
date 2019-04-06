@@ -8,8 +8,8 @@ using namespace std;
 string welcome();
 void print_seats(string flight[]);
 void populate_seats();
-bool exist(string a, int b);
-bool validate(string a, int b);
+bool validate_seat(string a, int b);
+bool validate_flight(string a);
 
 //2D array for storing seat numbers and passenger details
 string flights [5][52]; 
@@ -43,19 +43,19 @@ int main(){
         do{
             cin >> flight;
         }
-        while(!validate(flight, 5));
+        while(!validate_flight(flight));
         
         passengers[p][1] = flight;
 
         cout << "\nSelect your seat:" << endl;        
 
-        int_flight = stoi(flight);
+        int_flight = stoi(flight) - 1;
         print_seats(flights[int_flight]);
 
         do{
             cin >> seat;                
         }
-        while (!exist(seat, int_flight));
+        while (!validate_seat(seat, int_flight));
 
         for (int i = 0; i < 51; i++){
             if (flights[int_flight][i] == seat){
@@ -140,7 +140,19 @@ void populate_seats(){
     }
 }
 
-bool exist(string a, int b){
+//Validates flight selection entry
+bool validate_flight(string a){
+    for (int i = 1; i < 6; i++){
+        if (a == to_string(i)){
+            return true;
+        }
+    }
+    cout << "Enter a valid flight" << endl;
+    return false;
+}
+
+//Validates seat selection entry
+bool validate_seat(string a, int b){
     for (int i = 0; i < 51; i++){
         if (flights[b][i] == a){    
             return true;
@@ -148,14 +160,4 @@ bool exist(string a, int b){
     }    
     cout << "Enter a valid seat" << endl;
     return false ;
-}
-
-bool validate(string a, int b){
-    for (int i = 0; i < 5; i++){
-        if (a == to_string(i)){
-            return true;
-        }
-    }
-    cout << "Enter a valid flight" << endl;
-    return false;
 }
