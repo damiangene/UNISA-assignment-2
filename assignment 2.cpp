@@ -9,6 +9,7 @@ string welcome();
 void print_seats(string flight[]);
 void populate_seats();
 bool exist(string a, int b);
+bool validate(string a, int b);
 
 //2D array for storing seat numbers and passenger details
 string flights [5][52]; 
@@ -39,7 +40,11 @@ int main(){
         }
         cout << "Choose the time by enetering the option number from the displayed list:" << endl;
 
-        cin >> flight;
+        do{
+            cin >> flight;
+        }
+        while(!validate(flight, 5));
+        
         passengers[p][1] = flight;
 
         cout << "\nSelect your seat:" << endl;        
@@ -60,6 +65,7 @@ int main(){
         }
 
         passengers[p][2] = seat;
+        flights[int_flight][51] = to_string(stoi(flights[int_flight][51]) + 1);        
 
         cout << "Would you like to book another seat? y/n: " ;
         cin >> book;
@@ -142,4 +148,14 @@ bool exist(string a, int b){
     }    
     cout << "Enter a valid seat" << endl;
     return false ;
+}
+
+bool validate(string a, int b){
+    for (int i = 0; i < 5; i++){
+        if (a == to_string(i)){
+            return true;
+        }
+    }
+    cout << "Enter a valid flight" << endl;
+    return false;
 }
