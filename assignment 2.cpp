@@ -11,13 +11,15 @@ void populate_seats();
 bool validate_flight(string a);
 bool validate_seat(string a, int b);
 bool validate_book(string a);
-void print_ticket(string passenger[], int i);
+void print_ticket(string passenger[], int &i);
 
 //2D array for storing seat numbers and passenger details
 string flights [5][52]; 
 string passengers [4][250];
+const int ECONOMY_CLASS = 1600;
 
 int main(){   
+    //initialising all variables that are needed in the program
     string seat, flight, book = "y";
     int int_flight, p = 0, j = 0;
     int seat_number, seat_price;
@@ -32,7 +34,7 @@ int main(){
         
         //Checks whether all the flights are fully booked,
         //If so, it ends the whole program.
-        for (int i = 0; i < 5; i++){               
+        for (int i = 0; i < 5; i++){             
             if (flights[i][51] != "50"){
             cout << i + 1 << ".  " << flights[i][0] << endl;
             }
@@ -52,12 +54,17 @@ int main(){
         }
         while(!validate_flight(flight));
 
-        cout << "\nSelect your seat:" << endl;        
-
         //Converts the flight selection string to an int. 
-        //So that the index can be selected when printing out the seats.
+        //So that the index can be selected when printing out the seats and flight time.
         int_flight = stoi(flight) - 1;
+
+        //Prompts user to select seat number and accesses flight time from flights array
+        cout << "\nThe available seats for " << flights[int_flight][0].substr(0,5) << " are as follows:" << endl;        
+
+        //Displays the seating layout for the chosen flight.
         print_seats(flights[int_flight]);
+
+        cout << "Please key in a seat number to choose a seat (eg:A2)" << endl;
 
         //Seat selection.
         do{
@@ -77,11 +84,11 @@ int main(){
         //checks whether the seat was booked in first or economy class
         //Sets the seat price for the passengers array 
         if (seat_number < 25){
-            seat_price = 1920;
+            seat_price = ECONOMY_CLASS*1.2;
             passengers[p][4] = "First class";
         }
         else{
-            seat_price = 1600;
+            seat_price = ECONOMY_CLASS;
             passengers[p][4] = "Economy class";
         }
 
@@ -185,8 +192,8 @@ void populate_seats(){
     }
 }
 
-//Prints out the ticket for the passenger
-void print_ticket(string passenger[], int i){
+//Prints out the ticket for the passenger using setw for formatting
+void print_ticket(string passenger[], int &i){
     int name = passenger[0].length();
     cout << "\n***************************" << endl;
     cout << "Travel Ticket for Flight " << i + 1 << endl;
@@ -228,7 +235,7 @@ bool validate_seat(string a, int b){
             return true;
         }
     }    
-    cout << "Enter a valid seat" << endl;
+    cout << "Please select an available and valid seat number." << endl;
     return false ;
 }
 
