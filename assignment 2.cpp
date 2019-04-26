@@ -7,23 +7,24 @@ using namespace std;
 //declaration of functions
 string welcome();
 void print_seats(string flight[]);
-void populate_seats();
+void populate_seats(string (&flight_arr)[5][52]);
 bool validate_flight(string a);
-bool validate_seat(string a, int b);
+bool validate_seat(string a, string (&flight_arr)[5][52], int b);
 bool validate_book(string a);
-void print_ticket(string passenger[], int &i);
+void print_ticket(string passenger[], string (&flight_arr)[5][52], int &i);
 
-//2D array for storing seat numbers and passenger details
-string flights [5][52]; 
-string passengers [4][250];
+//Const for economy class price
 const int ECONOMY_CLASS = 1600;
 
 int main(){   
-    //initialising all variables that are needed in the program
+    //Initialising all variables that are needed in the program
+    //2D array for storing seat numbers and passenger details
+    string flights [5][52]; 
+    string passengers [4][250];
     string seat, flight, book = "y";
     int int_flight, p = 0, j = 0;
     int seat_number, seat_price;
-    populate_seats();
+    populate_seats(flights);
     
     //while loop that repeats the booking process while the user wants to continue booking.
     while (book == "y" || book == "Y"){   
@@ -70,7 +71,7 @@ int main(){
         do{
             cin >> seat;                
         }
-        while (!validate_seat(seat, int_flight));
+        while (!validate_seat(seat, flights, int_flight));
 
         //Changes the booked seat number to **
         for (int i = 0; i < 51; i++){
@@ -100,7 +101,7 @@ int main(){
         //Keeps track of the number of seats booked on each flight
         flights[int_flight][51] = to_string(stoi(flights[int_flight][51]) + 1); 
 
-        print_ticket(passengers[p], int_flight);       
+        print_ticket(passengers[p], flights, int_flight);       
 
         //Checks whether the user wants to book for another flight.
         cout << "\nWould you like to book another seat? Y/N: " ;
@@ -165,13 +166,13 @@ void print_seats(string flight[]){
 }
 
 //Seat generation for all 5 flights
-void populate_seats(){
+void populate_seats(string (&flight_arr)[5][52]){
     //Setting index 0 for all flights to the flights time
-    flights[0][0] = "07:00\t09:30";
-    flights[1][0] = "09:00\t11:30";
-    flights[2][0] = "11:00\t13:30";
-    flights[3][0] = "13:00\t15:30";
-    flights[4][0] = "15:00\t17:30";
+    flight_arr[0][0] = "07:00\t09:30";
+    flight_arr[1][0] = "09:00\t11:30";
+    flight_arr[2][0] = "11:00\t13:30";
+    flight_arr[3][0] = "13:00\t15:30";
+    flight_arr[4][0] = "15:00\t17:30";
     
     for (int a = 0; a < 5; a++){   
         int b = 0;
@@ -183,17 +184,17 @@ void populate_seats(){
                 }
                 //Converting i into an ascii character to form the letters
                 string seat = char('0' + i) + to_string(j);
-                flights[a][b+1] = seat;
+                flight_arr[a][b+1] = seat;
                 
                 b++;
             }
-            flights[a][b+1] = "0";
+            flight_arr[a][b+1] = "0";
         }
     }
 }
 
 //Prints out the ticket for the passenger using setw for formatting
-void print_ticket(string passenger[], int &i){
+void print_ticket(string passenger[], string (&flight_arr)[5][52], int &i){
     int name = passenger[0].length();
     cout << "\n***************************" << endl;
     cout << "Travel Ticket for Flight " << i + 1 << endl;
@@ -205,10 +206,10 @@ void print_ticket(string passenger[], int &i){
     cout << setw(31 + name) << "" << setw(20) << "Seat No."  << ":  " << passenger[2] << endl;
 
     cout << setw(15) << "Departure" << ":  " << setw(13 + name) << "Johannesburg";
-    cout << setw(20) << "Departure Time" << ":  " << flights[i][0].substr(0,5) << endl;
+    cout << setw(20) << "Departure Time" << ":  " << flight_arr[i][0].substr(0,5) << endl;
 
     cout << setw(15) << "Destination" << ":  " << setw(13 + name) << "Cape Town";
-    cout << setw(20) << "Arrival Time" << ":  " << flights[i][0].substr(6,10) << endl;
+    cout << setw(20) << "Arrival Time" << ":  " << flight_arr[i][0].substr(6,10) << endl;
 
     cout << "\n***************************" << endl;
     cout << "Amount: R" << passenger[3] << endl;
@@ -229,13 +230,13 @@ bool validate_flight(string a){
 }
 
 //Validates seat selection entry
-bool validate_seat(string a, int b){
+bool validate_seat(string a, string (&flight_arr)[5][52], int b){
     for (int i = 0; i < 51; i++){
-        if (flights[b][i] == a){    
+        if (flight_arr[b][i] == a){
             return true;
         }
     }    
-    cout << "Please select an available and valid seat number." << endl;
+    cout << "Please select an available seat number." << endl;
     return false ;
 }
 
